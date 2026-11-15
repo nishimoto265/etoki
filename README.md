@@ -1,6 +1,6 @@
 # etoki
 
-**English:** etoki turns "explain how this works" into a one-page HTML walkthrough: hand-drawn diagrams that light up step by step, with narration generated locally (Kokoro, no API key). Install it as a Claude Code or Codex plugin and just ask the agent to explain something. Narration is Japanese for now.
+日本語 | [English](README.en.md)
 
 名前は日本語の「絵解き」から取りました。絵を見せながら、声で語って説明することです。
 

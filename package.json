@@ -31,7 +31,8 @@
     "LICENSE",
     ".claude-plugin",
     ".agents",
-    "plugin.json"
+    "plugin.json",
+    "README.en.md"
   ],
   "repository": {
     "type": "git",
