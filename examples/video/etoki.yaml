@@ -1,0 +1,147 @@
+title: 動画がアップロードから再生されるまで
+
+readings:
+  playlist.m3u8: プレイリスト
+  job: ジョブ
+
+figure:
+  columns:
+    user: 利用者
+    entry: 入口
+    work: 処理
+    store: 置き場
+  nodes:
+    creator: { col: user, row: 0, label: 投稿者, sub: スマホから, icon: person }
+    viewer:  { col: user, row: 3, label: 視聴者, sub: スマホで見る, icon: phone }
+    upapi:   { col: entry, row: 0, label: アップロード API, icon: gateway }
+    cdn:     { col: entry, row: 2, label: CDN, sub: 近くのサーバー, icon: cloud }
+    playapi: { col: entry, row: 3, label: 再生 API, icon: gateway }
+    queue:   { col: work, row: 0, label: 変換キュー, kind: store, icon: queue }
+    tx:      { col: work, row: 1, span: 2, label: 変換ワーカー, sub: 見られる形に作り変える }
+    log:     { col: work, row: 3, label: 再生の記録, sub: 見た秒数, icon: log }
+    raw:     { col: store, row: 0, label: 元動画の置き場, sub: 届いたまま, kind: store, icon: folder }
+    meta:    { col: store, row: 1, label: 動画の情報 DB, sub: タイトル・状態, kind: store, icon: db }
+    out:     { col: store, row: 2, label: 配信用の置き場, sub: 画質ごとの 10 秒ファイル, kind: store, icon: video }
+    stats:   { col: store, row: 3, label: 集計, sub: 再生回数, kind: store, icon: chart }
+    src:     { in: tx, col: 0, row: 1, label: 元動画, sub: 10 分 }
+    split:   { in: tx, col: 1, row: 1, label: 10 秒ずつ, sub: 60 個に分ける }
+    q1080:   { in: tx, col: 2, row: 0, label: 1080p }
+    q720:    { in: tx, col: 2, row: 1, label: 720p }
+    q360:    { in: tx, col: 2, row: 2, label: 360p }
+  edges:
+    - creator -> upapi
+    - upapi -> raw
+    - upapi -> queue
+    - queue -> tx
+    - raw -> tx
+    - tx -> meta
+    - tx -> out
+    - viewer -> cdn
+    - viewer -> playapi
+    - cdn -> out
+    - playapi -> meta
+    - playapi -> log
+    - log -> stats
+    - src -> split
+    - split -> q1080
+    - split -> q720
+    - split -> q360
+
+steps:
+  - title: 全体を見る
+    says:
+      - text: 動画配信は、上の段のアップロードと、下の段の再生に分かれる。
+      - text: 上の段では、投稿された動画を、見られる形に作り変えて置いておく。
+        flow: [creator -> upapi, upapi -> queue, queue -> tx, tx -> out]
+      - text: 下の段では、視聴者が近くの CDN から動画を少しずつ取る。
+        flow: [viewer -> cdn, cdn -> out]
+
+  - title: アップロードする
+    says:
+      - text: 投稿者が動画を選ぶと、アップロード API に送られる。
+        flow:
+          - creator -> upapi: cat.mp4・1.2 GB
+      - text: API は、届いた動画をそのまま元動画の置き場に保存する。
+        flow:
+          - upapi -> raw: そのまま保存
+
+  - title: 変換を頼む
+    says:
+      - text: API は、変換キューに「この動画を変換して」と仕事を置く。
+        flow:
+          - upapi -> queue: job 8812
+      - text: 変換ワーカーが仕事を受け取り、元動画を読み込む。
+        flow:
+          - queue -> tx
+          - raw -> tx: 元動画を読む
+
+  - title: 分けて変換する
+    says:
+      - text: 変換ワーカーの中では、10 分の元動画をまず 10 秒ずつ 60 個に分ける。
+        say: 変換ワーカーの中では、じゅっぷんの元動画をまず 10 秒ずつ 60 個に分ける。
+        on: [tx]
+        flow: [src -> split]
+        notes:
+          split: 60 個
+        zoom: [tx]
+      - text: 60 個それぞれを、1080p・720p・360p の 3 つの画質で並べて作る。
+        on: [tx]
+        flow: [split -> q1080, split -> q720, split -> q360]
+        notes:
+          q360: 60 × 3 = 180 個
+        zoom: [tx]
+        say: 60 個それぞれを、1080 ピー、720 ピー、360 ピーの 3 つの画質で並べて作る。
+
+  - title: 変換したものを置く
+    says:
+      - text: できた 180 個のファイルを、配信用の置き場に置く。
+        flow:
+          - tx -> out: 180 個
+      - text: 動画の情報 DB に、再生できる状態になったと書く。
+        flow:
+          - tx -> meta: ready
+
+  - title: 再生を始める
+    says:
+      - text: 視聴者が動画を開くと、再生 API に動画の情報を聞く。
+        flow:
+          - viewer -> playapi: GET /videos/8812
+      - text: 再生 API は、動画の情報 DB で再生できるかを確かめる。
+        flow:
+          - playapi -> meta: 8812 は再生できる？
+        notes:
+          meta: "status: ready"
+      - text: 再生できれば、画質ごとのファイルの一覧を返す。
+        flow:
+          - playapi -> viewer: playlist.m3u8
+
+  - title: 近くの CDN から取る
+    says:
+      - text: プレーヤーは、一覧を見て、最初の 10 秒を近くの CDN から取る。
+        flow:
+          - viewer -> cdn: 720p の 1 個目
+      - text: CDN に無いときだけ、配信用の置き場から取ってきて覚える。
+        flow:
+          - cdn -> out: CDN に無いとき
+
+  - title: 回線に合わせて画質を変える
+    says:
+      - text: 回線が遅くなると、プレーヤーは次の 10 秒から 360p に切り替える。
+        flow:
+          - viewer -> cdn: 360p の 13 個目
+        say: 回線が遅くなると、プレーヤーは次の 10 秒から 360 ピーに切り替える。
+      - text: 10 秒ずつに分けてあるので、止めずに途中で画質を変えられる。
+        on: [viewer, cdn]
+        notes:
+          viewer: 回線 5 → 1 Mbps
+          cdn: 12 個目までは 720p
+
+  - title: 見た記録を残す
+    says:
+      - text: プレーヤーは、どこまで見たかを再生 API に送り、再生の記録に残す。
+        flow:
+          - viewer -> playapi
+          - playapi -> log: 90 秒見た
+      - text: 記録は集計に足され、再生回数が増える。
+        flow:
+          - log -> stats: 再生回数 +1

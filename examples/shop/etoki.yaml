@@ -1,0 +1,100 @@
+title: 商品一覧が表示されるまで
+
+figure:
+  columns:
+    client: 端末
+    edge: 入口
+    app: アプリ
+    data: データ
+  nodes:
+    br:     { col: client, row: 1, label: ブラウザ, sub: 商品一覧, icon: browser }
+    dns:    { col: edge, row: 0, label: DNS, sub: 名前 → IP, icon: book }
+    cdn:    { col: edge, row: 1, label: CDN, sub: JS・画像を配る, icon: cloud }
+    lb:     { col: edge, row: 2, label: ロードバランサー, sub: 振り分け, icon: split }
+    static: { col: app, row: 0, label: 静的ファイル置き場, sub: ビルド済みの JS, kind: store, icon: folder }
+    app1:   { col: app, row: 1, label: アプリ 1, sub: API サーバー, icon: server }
+    app2:   { col: app, row: 2, label: アプリ 2, sub: API サーバー, icon: server }
+    cache:  { col: data, row: 0, label: キャッシュ, sub: Redis・60 秒で消える, kind: store, icon: cache }
+    db:     { col: data, row: 1, label: データベース（主）, sub: 書き込み, kind: store, icon: db }
+    rep:    { col: data, row: 2, label: データベース（複製）, sub: 読み取り専用, kind: store, icon: db2 }
+  edges:
+    - br -> dns
+    - br -> cdn
+    - cdn -> static
+    - br -> lb
+    - lb -> app1
+    - lb -> app2
+    - app1 -> cache
+    - app1 -> rep
+    - db -> rep
+
+steps:
+  - title: 全体を見る
+    says:
+      - text: 商品一覧のページは、左の端末から右のデータまで、4 つの段を通って表示される。
+      - text: 画面の部品は、上の CDN の道を通る。
+        flow: [br -> cdn, cdn -> static]
+      - text: 一覧のデータは、下のアプリとデータベースの道を通る。
+        flow: [br -> lb, lb -> app1, app1 -> cache, app1 -> rep]
+
+  - title: 名前を引く
+    says:
+      - text: ブラウザは、まず DNS にドメインの IP アドレスを聞く。
+        flow:
+          - br -> dns: shop.example.com は？
+      - text: DNS は、CDN とロードバランサーのアドレスを返す。
+        flow:
+          - dns -> br: 203.0.113.10
+
+  - title: 画面の部品を取る
+    says:
+      - text: ページの JS と画像は、CDN から取る。
+        flow:
+          - br -> cdn: GET /main.js
+      - text: CDN に無いときだけ、静的ファイル置き場から取ってきて覚える。
+        flow:
+          - cdn -> static: CDN に無いとき
+        notes:
+          static: main.js 180 KB
+
+  - title: 一覧を頼む
+    says:
+      - text: 画面の JS が、一覧の API を呼ぶ。
+        flow:
+          - br -> lb: GET /api/items?page=1
+      - text: ロードバランサーは、空いているアプリ 1 に振り分ける。
+        flow: [lb -> app1]
+        notes:
+          app1: CPU 20%
+          app2: CPU 80%
+
+  - title: キャッシュを見る
+    says:
+      - text: アプリは、まずキャッシュに同じ一覧があるかを見る。
+        flow:
+          - app1 -> cache: GET items:page1
+      - text: キャッシュは 60 秒で消えるので、今回は無かった。
+        flow:
+          - cache -> app1: 無し
+
+  - title: データベースを読む
+    says:
+      - text: 無いので、データベースの複製から 20 件を読む。
+        flow:
+          - app1 -> rep: SELECT … LIMIT 20
+      - text: 書き込みは主に、読み取りは複製に分けて、主の負荷を下げている。
+        flow:
+          - db -> rep: 書き込みを写す
+
+  - title: 返して覚える
+    says:
+      - text: 読んだ 20 件は、キャッシュに書いて 60 秒覚えておく。
+        flow:
+          - app1 -> cache: SET items:page1
+      - text: 一覧は、ロードバランサーを通ってブラウザに返る。
+        flow:
+          - lb -> br: 200 OK・20 件
+          - app1 -> lb
+      - text: 次の 60 秒に同じページを見た人は、キャッシュから答えをもらう。
+        notes:
+          cache: あと 60 秒はここで返す

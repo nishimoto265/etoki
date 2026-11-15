@@ -1,0 +1,79 @@
+title: 名前から IP アドレスを引くまで
+
+readings:
+  https://www.example.com: エイチティーティーピーエス ダブリューダブリューダブリュー イグザンプル ドット コム
+  example.com: イグザンプル ドット コム
+  .com: ドット コム
+
+figure:
+  columns:
+    pc: 手元のパソコン
+    isp: 回線の会社
+    dns: DNS サーバー
+  nodes:
+    br:  { col: pc, row: 0, label: ブラウザ, icon: browser }
+    os:  { col: pc, row: 1, label: スタブリゾルバ, sub: OS の中, icon: gear }
+    rs:  { col: isp, row: 1, label: フルリゾルバ, sub: 代わりに調べる, icon: server }
+    rt:  { col: dns, row: 0, label: ルート, sub: 一番上, icon: globe }
+    tld: { col: dns, row: 1, label: TLD, sub: .com の担当, icon: book }
+    au:  { col: dns, row: 2, label: 権威サーバー, sub: example.com の担当, icon: db }
+  edges:
+    - br -> os
+    - os -> rs
+    - rs -> rt
+    - rs -> tld
+    - rs -> au
+
+steps:
+  - title: 全体を見る
+    says:
+      - text: 名前から IP アドレスを引くには、手元のパソコン、回線の会社、DNS サーバーの 3 か所を通る。
+      - text: 実際に調べて回るのは、真ん中のフルリゾルバ。
+        on: [rs]
+
+  - title: 手元で探す
+    says:
+      - text: ブラウザに https://www.example.com を入れると、まず手元のキャッシュを見る。
+        on: [br]
+        notes:
+          br: キャッシュに無い
+      - text: 答えが無いので、OS のスタブリゾルバに聞く。
+        flow:
+          - br -> os: www.example.com は？
+
+  - title: フルリゾルバに頼む
+    says:
+      - text: スタブリゾルバは、フルリゾルバに代わりに調べてもらう。
+        flow: [os -> rs]
+
+  - title: ルートに聞く
+    says:
+      - text: フルリゾルバは、まずルートサーバーに聞く。
+        flow: [rs -> rt]
+      - text: ルートは「.com のことは TLD サーバーへ」と返す。
+        flow:
+          - rt -> rs: .com → TLD へ
+
+  - title: TLD に聞く
+    says:
+      - text: .com の TLD サーバーに聞く。
+        flow: [rs -> tld]
+      - text: TLD は「example.com は権威サーバーへ」と返す。
+        flow:
+          - tld -> rs: example.com → 権威へ
+
+  - title: 権威が答える
+    says:
+      - text: example.com の権威サーバーに聞く。
+        flow: [rs -> au]
+      - text: A レコードの答えは 93.184.215.14 という例の値。
+        say: A レコードの答えは 93.184.215.14 という例のあたい。
+        flow:
+          - au -> rs: 93.184.215.14
+
+  - title: 覚えておく
+    says:
+      - text: 答えは TTL 3600 秒のあいだキャッシュされ、2 回目は速い。
+        flow: [rs -> os, os -> br]
+        notes:
+          rs: TTL 3600 秒（例）

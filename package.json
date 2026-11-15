@@ -1,0 +1,41 @@
+{
+  "name": "etoki",
+  "version": "0.1.0",
+  "description": "図と音声で仕組みを説明するページを作る",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "etoki": "bin/etoki.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "js-yaml": "4.3.2",
+    "kuromoji": "0.1.2",
+    "lucide-static": "0.460.0",
+    "onnxruntime-node": "1.21.0",
+    "playwright": "1.65.1"
+  },
+  "scripts": {
+    "test": "node --test test/g2p.test.js test/reading.test.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "data",
+    "examples/*/etoki.yaml",
+    "skills",
+    "README.md",
+    "NOTICE.md",
+    "LICENSE",
+    ".claude-plugin",
+    ".agents",
+    "plugin.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nishimoto265/etoki.git"
+  },
+  "homepage": "https://github.com/nishimoto265/etoki"
+}

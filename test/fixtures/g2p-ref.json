@@ -1,0 +1,222 @@
+[
+ {
+  "text": "名前から アイピー アドレスを引くには、手元のパソコン、回線の会社、 ディーエヌエス サーバーの 3 か所を通る。",
+  "ps": "namae kaɾa aipʲiː adoɾesɨ o çikɯ ɲi βa temoto no pasokoɴ kaiseɴ no kaiɕa dʲiːenɯesɨ saːbaː no saɴ kaɕo o toːɾɯ"
+ },
+ {
+  "text": "実際に調べて回るのは、真ん中のフルリゾルバ。",
+  "ps": "ʥiʔsai ɲi ɕiɾabete maβaɾɯ no βa mannaka no ɸɯɾɯ ɾʲiʣoɾɯba"
+ },
+ {
+  "text": "ブラウザに エイチティーティーピーエス ダブリューダブリューダブリュー イグザンプル ドット コム を入れると、まず手元のキャッシュを見る。",
+  "ps": "bɯɾaɯʣa ɲi eiʨitʲiːtʲiːpʲiːesɨ dabɯɾʲɨː dabɯɾʲɨː dabɯɾʲɨː iɡɯʣampɯɾɯ doʔto komɯ o iɾeɾɯ to mazɨ temoto no kʲaʔɕɨ o mʲiɾɯ"
+ },
+ {
+  "text": "答えが無いので、 オーエス のスタブリゾルバに聞く。",
+  "ps": "kotae ɡa nai no de oːesɨ no sɨtabɯ ɾʲiʣoɾɯba ɲi kʲikɯ"
+ },
+ {
+  "text": "スタブリゾルバは、フルリゾルバに代わりに調べてもらう。",
+  "ps": "sɨtabɯ ɾʲiʣoɾɯba βa ɸɯɾɯ ɾʲiʣoɾɯba ɲi kaβaɾʲi ɲi ɕiɾabete moɾaɯ"
+ },
+ {
+  "text": "フルリゾルバは、まずルートサーバーに聞く。",
+  "ps": "ɸɯɾɯ ɾʲiʣoɾɯba βa mazɨ ɾɯːto saːbaː ɲi kʲikɯ"
+ },
+ {
+  "text": "ルートは「 ドット コム のことは ティーエルディー サーバーへ」と返す。",
+  "ps": "ɾɯːto βa doʔto komɯ no koto βa tʲiːeɾɯdʲiː saːbaː e to kaesɨ"
+ },
+ {
+  "text": "ドット コム の ティーエルディー サーバーに聞く。",
+  "ps": "doʔto komɯ no tʲiːeɾɯdʲiː saːbaː ɲi kʲikɯ"
+ },
+ {
+  "text": "ティーエルディー は「 イグザンプル ドット コム は権威サーバーへ」と返す。",
+  "ps": "tʲiːeɾɯdʲiː βa iɡɯʣampɯɾɯ doʔto komɯ βa keɴi saːbaː e to kaesɨ"
+ },
+ {
+  "text": "イグザンプル ドット コム の権威サーバーに聞く。",
+  "ps": "iɡɯʣampɯɾɯ doʔto komɯ no keɴi saːbaː ɲi kʲikɯ"
+ },
+ {
+  "text": "エー レコードの答えは 93てん184てん215てん14 という例の値。",
+  "ps": "eː ɾekoːdo no kotae βa kʲɨːʥɨː saɴ te ɴ çakɯ haʨiʥɨː joɴ te ɴ ɲiçakɯ ʥɨː ɡoteɴ ʥɨːjoɴ to jɯː ɾeː no atai"
+ },
+ {
+  "text": "答えは ティーティーエル 3600 秒のあいだキャッシュされ、2 回目は速い。",
+  "ps": "kotae βa tʲiːtʲiːeɾɯ saɴʣeɴ ɾoʔpʲakɯ bʲoː no aida kʲaʔɕɨ saɾe ɲi kai me βa hajai"
+ },
+ {
+  "text": "商品一覧のページは、左の端末から右のデータまで、4 つの段を通って表示される。",
+  "ps": "ɕoːçiɴ iʨiɾaɴ no peːʥi βa çidaɾʲi no tammaʦɨ kaɾa mʲiɡʲi no deːta made joɴ ʦɨ no daɴ o toːʔte çoːʥi saɾeɾɯ"
+ },
+ {
+  "text": "画面の部品は、上の シーディーエヌ の道を通る。",
+  "ps": "ɡameɴ no bɯçiɴ βa ɯe no ɕiːdʲiːenɯ no mʲiʨi o toːɾɯ"
+ },
+ {
+  "text": "一覧のデータは、下のアプリとデータベースの道を通る。",
+  "ps": "iʨiɾaɴ no deːta βa ɕita no apɯɾʲi to deːtabeːsɨ no mʲiʨi o toːɾɯ"
+ },
+ {
+  "text": "ブラウザは、まず ディーエヌエス にドメインの アイピー アドレスを聞く。",
+  "ps": "bɯɾaɯʣa βa mazɨ dʲiːenɯesɨ ɲi domeiɴ no aipʲiː adoɾesɨ o kʲikɯ"
+ },
+ {
+  "text": "ディーエヌエス は、 シーディーエヌ とロードバランサーのアドレスを返す。",
+  "ps": "dʲiːenɯesɨ βa ɕiːdʲiːenɯ to ɾoːdo baɾaɴsaː no adoɾesɨ o kaesɨ"
+ },
+ {
+  "text": "ページの ジェーエス と画像は、 シーディーエヌ から取る。",
+  "ps": "peːʥi no ʥeːesɨ to ɡaʣoː βa ɕiːdʲiːenɯ kaɾa toɾɯ"
+ },
+ {
+  "text": "シーディーエヌ に無いときだけ、静的ファイル置き場から取ってきて覚える。",
+  "ps": "ɕiːdʲiːenɯ ɲi nai tokʲi dake seːtekʲi ɸaiɾɯ okʲiba kaɾa toʔte kʲite oboeɾɯ"
+ },
+ {
+  "text": "画面の ジェーエス が、一覧の エーピーアイ を呼ぶ。",
+  "ps": "ɡameɴ no ʥeːesɨ ɡa iʨiɾaɴ no eːpʲiː ai o jobɯ"
+ },
+ {
+  "text": "ロードバランサーは、空いているアプリ 1 に振り分ける。",
+  "ps": "ɾoːdo baɾaɴsaː βa aite iɾɯ apɯɾʲi iʨi ɲi ɸɯɾʲiβakeɾɯ"
+ },
+ {
+  "text": "アプリは、まずキャッシュに同じ一覧があるかを見る。",
+  "ps": "apɯɾʲi βa mazɨ kʲaʔɕɨ ɲi onaʥi iʨiɾaɴ ɡa aɾɯka o mʲiɾɯ"
+ },
+ {
+  "text": "キャッシュは 60 秒で消えるので、今回は無かった。",
+  "ps": "kʲaʔɕɨ βa ɾokɯʥɨː bʲoː de kʲieɾɯ no de koŋkai βa nakaʔta"
+ },
+ {
+  "text": "無いので、データベースの複製から 20 件を読む。",
+  "ps": "nai no de deːtabeːsɨ no ɸɯkɯseː kaɾa ɲiʥɨː keɴ o jomɯ"
+ },
+ {
+  "text": "書き込みは主に、読み取りは複製に分けて、主の負荷を下げている。",
+  "ps": "kakʲikomʲi βa omoɲi jomʲitoɾʲi βa ɸɯkɯseː ɲi βakete nɯɕi no ɸɯka o saɡete iɾɯ"
+ },
+ {
+  "text": "読んだ 20 件は、キャッシュに書いて 60 秒覚えておく。",
+  "ps": "jonda ɲiʥɨː keɴ βa kʲaʔɕɨ ɲi kaite ɾokɯʥɨː bʲoː oboete okɯ"
+ },
+ {
+  "text": "一覧は、ロードバランサーを通ってブラウザに返る。",
+  "ps": "iʨiɾaɴ βa ɾoːdo baɾaɴsaː o toːʔte bɯɾaɯʣa ɲi kaeɾɯ"
+ },
+ {
+  "text": "次の 60 秒に同じページを見た人は、キャッシュから答えをもらう。",
+  "ps": "ʦɨɡʲi no ɾokɯʥɨː bʲoː ɲi onaʥi peːʥi o mʲita çito βa kʲaʔɕɨ kaɾa kotae o moɾaɯ"
+ },
+ {
+  "text": "動画配信は、上の段のアップロードと、下の段の再生に分かれる。",
+  "ps": "doːɡa haiɕiɴ βa ɯe no daɴ no aʔpɯɾoːdo to ɕita no daɴ no saiseː ɲi βakaɾeɾɯ"
+ },
+ {
+  "text": "上の段では、投稿された動画を、見られる形に作り変えて置いておく。",
+  "ps": "ɯe no daɴ de βa toːkoː saɾeta doːɡa o mʲiɾaɾeɾɯ kataʨi ɲi ʦɨkɯɾʲikae te oite okɯ"
+ },
+ {
+  "text": "下の段では、視聴者が近くの シーディーエヌ から動画を少しずつ取る。",
+  "ps": "ɕita no daɴ de βa ɕiʨoːɕa ɡa ʨikakɯ no ɕiːdʲiːenɯ kaɾa doːɡa o sɨkoɕizɨʦɨ toɾɯ"
+ },
+ {
+  "text": "投稿者が動画を選ぶと、アップロード エーピーアイ に送られる。",
+  "ps": "toːkoː ɕa ɡa doːɡa o eɾabɯ to aʔpɯɾoːdo eːpʲiːai ɲi okɯɾaɾeɾɯ"
+ },
+ {
+  "text": "エーピーアイ は、届いた動画をそのまま元動画の置き場に保存する。",
+  "ps": "eːpʲiː ai βa todoita doːɡa o sono mama moto doːɡa no okʲiba ɲi hoʣoɴ sɨɾɯ"
+ },
+ {
+  "text": "エーピーアイ は、変換キューに「この動画を変換して」と仕事を置く。",
+  "ps": "eːpʲiː ai βa heŋkaɴ kʲɨː ɲi kono doːɡa o heŋkaɴ ɕite to ɕiɡoto o okɯ"
+ },
+ {
+  "text": "変換ワーカーが仕事を受け取り、元動画を読み込む。",
+  "ps": "heŋkaɴ βaːkaː ɡa ɕiɡoto o ɯketoɾʲi moto doːɡa o jomʲikomɯ"
+ },
+ {
+  "text": "変換ワーカーの中では、10 分の元動画をまず 10 秒ずつ 60 個に分ける。",
+  "ps": "heŋkaɴ βaːkaː no naka de βa ʥɨː bɯɴ no moto doːɡa o mazɨ ʥɨː bʲoː zɨʦɨ ɾokɯʥɨː ko ɲi βakeɾɯ"
+ },
+ {
+  "text": "60 個それぞれを、1080 ピー、720 ピー、360 ピーの 3 つの画質で並べて作る。",
+  "ps": "ɾokɯʥɨː ko soɾeʣoɾe o seɴ haʨiʥɨː pʲiː nana çakɯ ɲiʥɨː pʲiː sambʲakɯ ɾokɯʥɨː pʲiː no saɴ ʦɨ no ɡaɕiʦɨ de naɾabete ʦɨkɯɾɯ"
+ },
+ {
+  "text": "できた 180 個のファイルを、配信用の置き場に置く。",
+  "ps": "dekʲita çakɯ haʨiʥɨː ko no ɸaiɾɯ o haiɕiɴ joː no okʲiba ɲi okɯ"
+ },
+ {
+  "text": "動画の情報 ディービー に、再生できる状態になったと書く。",
+  "ps": "doːɡa no ʥoːhoː dʲiːbʲiː ɲi saiseː dekʲiɾɯ ʥoːtai ɲinaʔta to kakɯ"
+ },
+ {
+  "text": "視聴者が動画を開くと、再生 エーピーアイ に動画の情報を聞く。",
+  "ps": "ɕiʨoːɕa ɡa doːɡa o çiɾakɯ to saiseː eːpʲiː ai ɲi doːɡa no ʥoːhoː o kʲikɯ"
+ },
+ {
+  "text": "再生 エーピーアイ は、動画の情報 ディービー で再生できるかを確かめる。",
+  "ps": "saiseː eːpʲiːai βa doːɡa no ʥoːhoː dʲiːbʲiː de saiseː dekʲiɾɯ ka o taɕikameɾɯ"
+ },
+ {
+  "text": "再生できれば、画質ごとのファイルの一覧を返す。",
+  "ps": "saiseː dekʲiɾeba ɡaɕiʦɨ ɡoto no ɸaiɾɯ no iʨiɾaɴ o kaesɨ"
+ },
+ {
+  "text": "プレーヤーは、一覧を見て、最初の 10 秒を近くの シーディーエヌ から取る。",
+  "ps": "pɯɾeːjaː βa iʨiɾaɴ o mʲite saiɕo no ʥɨː bʲoː o ʨikakɯ no ɕiːdʲiːenɯ kaɾa toɾɯ"
+ },
+ {
+  "text": "シーディーエヌ に無いときだけ、配信用の置き場から取ってきて覚える。",
+  "ps": "ɕiːdʲiːenɯ ɲi nai tokʲi dake haiɕiɴ joː no okʲiba kaɾa toʔte kʲite oboeɾɯ"
+ },
+ {
+  "text": "回線が遅くなると、プレーヤーは次の 10 秒から 360 ピーに切り替える。",
+  "ps": "kaiseɴ ɡa osokɯ naɾɯto pɯɾeːjaː βa ʦɨɡʲi no ʥɨː bʲoː kaɾa sambʲakɯ ɾokɯʥɨː pʲiː ɲi kʲiɾʲikaeɾɯ"
+ },
+ {
+  "text": "10 秒ずつに分けてあるので、止めずに途中で画質を変えられる。",
+  "ps": "ʥɨː bʲoː zɨʦɨ ɲi βakete aɾɯ no de tomezɨ ɲi toʨɨː de ɡaɕiʦɨ o kaeɾaɾeɾɯ"
+ },
+ {
+  "text": "プレーヤーは、どこまで見たかを再生 エーピーアイ に送り、再生の記録に残す。",
+  "ps": "pɯɾeːjaː βa doko made mʲita ka o saiseː eːpʲiː ai ɲi okɯɾʲi saiseː no kʲiɾokɯ ɲi nokosɨ"
+ },
+ {
+  "text": "記録は集計に足され、再生回数が増える。",
+  "ps": "kʲiɾokɯ βa ɕɨːkeː ɲi tasa ɾe saiseː kaisɨː ɡa ɸɯeɾɯ"
+ },
+ {
+  "text": "今日は良い天気ですね。",
+  "ps": "kʲoː βa joi teŋkʲi desɨ ne"
+ },
+ {
+  "text": "東京タワーに行った。",
+  "ps": "toːkʲoː taβaː ɲi iʔta"
+ },
+ {
+  "text": "ログインしてから、注文ボタンを押す。",
+  "ps": "ɾoɡɯiɴ ɕite kaɾa ʨɨːmoɴ botaɴ o osɨ"
+ },
+ {
+  "text": "ちょっと待って！",
+  "ps": "ʨoʔto maʔte!"
+ },
+ {
+  "text": "お疲れさまでした。",
+  "ps": "oʦɨkaɾesama deɕi ta"
+ },
+ {
+  "text": "1てん5 秒かかる。",
+  "ps": "iʨi teɴ ɡo bʲoː kakaɾɯ"
+ },
+ {
+  "text": "2026 年 11 月 15 日。",
+  "ps": "ɲi seɴ ɲiʥɨːɾokɯ neɴ ʥɨːiʨi ɡaʦɨ ʥɨː ɡo ɲiʨi"
+ }
+]

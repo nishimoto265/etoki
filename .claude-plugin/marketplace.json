@@ -1,0 +1,11 @@
+{
+  "name": "etoki",
+  "owner": { "name": "nishimoto265", "url": "https://github.com/nishimoto265" },
+  "plugins": [
+    {
+      "name": "etoki",
+      "source": "./",
+      "description": "仕組みを、手書き風の図と読み上げの音声で説明するページを作る / Explain how things work with hand-drawn diagrams and narration"
+    }
+  ]
+}
