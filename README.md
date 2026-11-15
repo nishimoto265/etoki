@@ -35,6 +35,7 @@
 
 ```bash
 codex plugin marketplace add nishimoto265/etoki
+codex plugin add etoki@etoki
 ```
 
 ### 頼み方

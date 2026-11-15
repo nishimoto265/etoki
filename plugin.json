@@ -1,11 +1,20 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "etoki",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "仕組みを、手書き風の図と読み上げの音声で説明するページを作る / Explain how things work with hand-drawn diagrams and narration",
-  "author": { "name": "nishimoto265", "url": "https://github.com/nishimoto265" },
+  "author": {
+    "name": "nishimoto265",
+    "url": "https://github.com/nishimoto265"
+  },
   "homepage": "https://github.com/nishimoto265/etoki",
   "repository": "https://github.com/nishimoto265/etoki",
   "license": "MIT",
-  "keywords": ["diagram", "explainer", "narration", "tts", "walkthrough"]
+  "keywords": [
+    "diagram",
+    "explainer",
+    "narration",
+    "tts",
+    "walkthrough"
+  ]
 }

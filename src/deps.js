@@ -26,7 +26,7 @@ function install() {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({ name: 'etoki-deps', private: true, dependencies: PKG.dependencies }, null, 1));
   console.error(`初回の準備: 道具の部品を ${dir} に入れます（数分かかります）`);
-  const r = spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['install', '--no-audit', '--no-fund', '--omit=dev'], { cwd: dir, stdio: 'inherit' });
+  const r = spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['install', '--no-audit', '--no-fund', '--omit=dev', '--cache', path.join(CACHE, 'npm-cache')], { cwd: dir, stdio: 'inherit' });
   if (r.status !== 0) throw new Error('部品を入れられませんでした。ネットワークにつながっているか確かめてください');
 }
 

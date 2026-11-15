@@ -1,6 +1,6 @@
 {
   "name": "etoki",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "図と音声で仕組みを説明するページを作る",
   "license": "MIT",
   "type": "commonjs",

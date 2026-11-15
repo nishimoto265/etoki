@@ -3,7 +3,18 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const { load, resolveDir } = require('./deps');
 
+class BrowserError extends Error {}
+
 async function launch() {
+  try {
+    return await launchRaw();
+  } catch (e) {
+    if (e instanceof BrowserError) throw e;
+    throw new BrowserError('検査に使うブラウザを起動できませんでした。サンドボックスの中で動かしていると起きることがあります。サンドボックスの外で動かすか、--no-check を付けて組み立ててください（' + String(e.message || e).split('\n')[0] + '）');
+  }
+}
+
+async function launchRaw() {
   const { chromium } = load('playwright');
   try {
     return await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
@@ -12,7 +23,7 @@ async function launch() {
     console.error('初回の準備: 検査に使うブラウザを入れます');
     const cli = path.join(resolveDir('playwright'), 'cli.js');
     const r = spawnSync(process.execPath, [cli, 'install', 'chromium', '--only-shell'], { stdio: 'inherit', env: { ...process.env, PLAYWRIGHT_SKIP_BROWSER_GC: '1' } });
-    if (r.status !== 0) throw new Error('検査に使うブラウザを入れられませんでした');
+    if (r.status !== 0) throw new BrowserError('検査に使うブラウザを入れられませんでした。ネットワークにつながっているか確かめてください');
     return chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
   }
 }
@@ -101,4 +112,4 @@ async function inspect(htmlFile, opts) {
   return { problems, shots };
 }
 
-module.exports = { inspect, launch };
+module.exports = { inspect, launch, BrowserError };

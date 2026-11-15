@@ -47,7 +47,15 @@ async function cmdBuild(args) {
   if (args['no-check']) return;
   const { inspect } = require('../src/check');
   const shotsArg = args.shots ? String(args.shots).split(',').map(Number) : null;
-  const r = await inspect(out, { play: Object.keys(audio).length ? 'audio' : 'timer', shots: shotsArg || [], shotPath: (k) => out.replace(/\.html$/, `-shot-${k}.png`) });
+  let r;
+  try {
+    r = await inspect(out, { play: Object.keys(audio).length ? 'audio' : 'timer', shots: shotsArg || [], shotPath: (k) => out.replace(/\.html$/, `-shot-${k}.png`) });
+  } catch (e) {
+    if (!(e instanceof require('../src/check').BrowserError)) throw e;
+    console.log('崩れの検査をしていません: ' + e.message);
+    process.exitCode = 4;
+    return;
+  }
   r.shots.forEach((p) => console.log('画面: ' + p));
   if (r.problems.length) {
     console.log(`崩れ ${r.problems.length} 件:`);
