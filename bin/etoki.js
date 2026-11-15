@@ -22,7 +22,7 @@ async function cmdBuild(args) {
   if (!file) throw new Error('使い方: etoki build <データファイル.yaml> [--voice 声] [--no-check]');
   const c = compile(file);
   const { voices } = require('../src/voice');
-  const voice = voices.pick(args.voice, c.voice);
+  const voice = voices.pick(args.voice, c.voice, c.lang);
   let audio = {}, dur = {}, speech = false, credit = '';
   if (voice.engine === 'browser') speech = true;
   else if (voice.engine !== 'none') {
@@ -66,7 +66,7 @@ async function cmdBuild(args) {
 
 async function cmdVoices(args) {
   const { sampler } = require('../src/voice');
-  const out = await sampler(args.text, args.out);
+  const out = await sampler(args.text, args.out, args.lang === 'en' ? 'en' : 'ja');
   console.log(`${out} を作りました`);
 }
 
@@ -74,7 +74,7 @@ const cmds = { build: cmdBuild, voices: cmdVoices };
 const args = parseArgs(process.argv.slice(2));
 const cmd = cmds[args._[0]];
 if (!cmd) {
-  console.error('使い方:\n  etoki build <データファイル.yaml> [--voice 声] [--no-check] [--shots 0,3,5] [--video]\n  etoki voices [--text 文]');
+  console.error('使い方:\n  etoki build <データファイル.yaml> [--voice 声] [--no-check] [--shots 0,3,5] [--video]\n  etoki voices [--text 文] [--lang en]');
   process.exit(1);
 }
 async function release() {

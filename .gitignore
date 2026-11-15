@@ -3,3 +3,4 @@ examples/*/*.html
 examples/*/*.mp4
 examples/*/etoki-shot-*.png
 !examples/shop/etoki-shot-0.png
+!examples/shop-en/etoki-shot-0.png

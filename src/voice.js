@@ -2,14 +2,24 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const DEFAULT = 'kokoro:jf_alpha';
+const DEFAULTS = { ja: 'kokoro:jf_alpha', en: 'kokoro:af_heart' };
 const KOKORO = {
-  jf_alpha: '女性',
-  jf_gongitsune: '女性',
-  jf_nezumi: '女性',
-  jf_tebukuro: '女性',
-  jm_kumo: '男性'
+  jf_alpha: '女性 / female',
+  jf_gongitsune: '女性 / female',
+  jf_nezumi: '女性 / female',
+  jf_tebukuro: '女性 / female',
+  jm_kumo: '男性 / male',
+  af_heart: 'US female',
+  af_bella: 'US female',
+  af_nicole: 'US female',
+  am_michael: 'US male',
+  am_fenrir: 'US male',
+  am_puck: 'US male',
+  bf_emma: 'UK female',
+  bm_george: 'UK male',
+  bm_fable: 'UK male'
 };
+const DEFAULT = DEFAULTS.ja;
 
 function configFile() {
   return path.join(process.env.XDG_CONFIG_HOME || path.join(os.homedir(), '.config'), 'etoki', 'config.yaml');
@@ -24,33 +34,40 @@ function userConfig() {
 
 function parse(s) {
   const v = String(s).trim();
-  if (v === 'none' || v === 'browser') return { engine: v, name: null, label: v === 'none' ? '音声なし' : 'ブラウザの読み上げ' };
+  if (v === 'none' || v === 'browser') return { engine: v, name: null, lang: null, label: v === 'none' ? '音声なし' : 'ブラウザの読み上げ' };
   const [engine, name] = v.includes(':') ? v.split(':') : ['kokoro', v];
   if (engine === 'kokoro') {
     if (!KOKORO[name]) throw new Error(`Kokoro に ${name} という声はありません（${Object.keys(KOKORO).join(', ')}）`);
-    return { engine, name, label: `Kokoro ${name}` };
+    return { engine, name, lang: name[0] === 'j' ? 'ja' : 'en', label: `Kokoro ${name}` };
   }
   throw new Error(`声の指定 ${v} が読めません。kokoro:jf_alpha、browser、none のように書いてください`);
 }
 
 const voices = {
-  pick(arg, fromFile) {
-    if (arg && arg !== true) return parse(arg);
-    if (fromFile) return parse(fromFile);
-    const cfg = userConfig();
-    if (cfg.voice) return parse(cfg.voice);
-    return parse(DEFAULT);
+  pick(arg, fromFile, lang) {
+    lang = lang || 'ja';
+    let v;
+    if (arg && arg !== true) v = parse(arg);
+    else if (fromFile) v = parse(fromFile);
+    else {
+      const cfg = userConfig();
+      const fromCfg = cfg[lang === 'en' ? 'voice_en' : 'voice'];
+      v = parse(fromCfg || DEFAULTS[lang] || DEFAULT);
+    }
+    if (v.lang && v.lang !== lang) throw new Error(`声 ${v.name} は ${v.lang === 'en' ? '英語' : '日本語'}の声です。データファイルの lang: ${lang} に合う声を選んでください（例: ${DEFAULTS[lang]}）`);
+    return v;
   },
-  list() {
-    return Object.entries(KOKORO).map(([k, g]) => ({ id: 'kokoro:' + k, gender: g }));
+  list(lang) {
+    return Object.entries(KOKORO).filter(([k]) => !lang || (lang === 'en') === (k[0] !== 'j')).map(([k, g]) => ({ id: 'kokoro:' + k, gender: g }));
   }
 };
 
-async function sampler(text, out) {
+async function sampler(text, out, lang) {
   const { synthesizeOne } = require('./tts');
-  const sentence = text || 'ブラウザは、まず DNS にドメインの IP アドレスを聞く。';
+  lang = lang || 'ja';
+  const sentence = text || (lang === 'en' ? 'First, the browser asks DNS for the IP address of the domain.' : 'ブラウザは、まず DNS にドメインの IP アドレスを聞く。');
   const rows = [];
-  for (const v of voices.list()) {
+  for (const v of voices.list(lang)) {
     const a = await synthesizeOne(sentence, parse(v.id));
     rows.push({ id: v.id, gender: v.gender, src: a.src, dur: a.dur });
   }

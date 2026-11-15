@@ -73,16 +73,23 @@ async function kokoroVoice(k, name) {
   return k.voices[name];
 }
 
-async function phonemes(reading) {
+async function phonemes(reading, voice) {
+  if (voice && voice.lang === 'en') return require('./g2p-en').phonemizeEn(reading, voice.name[0]);
   const g2p = require('./g2p-ja');
   await g2p.init();
   return g2p.g2p(reading);
 }
 
+function plainReading(text, dict) {
+  let s = String(text);
+  for (const k of Object.keys(dict || {}).sort((a, b) => b.length - a.length)) s = s.split(k).join(String(dict[k]));
+  return s;
+}
+
 async function kokoroSay(reading, voice) {
   const k = await kokoro();
   const style = await kokoroVoice(k, voice.name);
-  const ps = await phonemes(reading);
+  const ps = await phonemes(reading, voice);
   const ids = [0];
   for (const c of ps) if (k.vocab[c] !== undefined) ids.push(k.vocab[c]);
   ids.push(0);
@@ -111,7 +118,7 @@ function engineSay(voice) {
 }
 
 async function synthesizeReading(reading, voice, ffmpeg) {
-  const basis = voice.engine === 'kokoro' ? await phonemes(reading) : reading;
+  const basis = voice.engine === 'kokoro' ? await phonemes(reading, voice) : reading;
   const key = hash([voice.engine, voice.name, KOKORO_REV, basis].join('\n'));
   const dir = path.join(CACHE, 'audio', key.slice(0, 2));
   const meta = path.join(dir, key + '.json');
@@ -143,9 +150,10 @@ function cueId(cues, k) {
 }
 
 async function synthesize(c, voice) {
-  const dict = dictionary(c.readings);
-  const items = c.cues.map((q, k) => ({ id: cueId(c.cues, k), k, reading: toReading(q.say ? String(q.say) : q.text, dict) }));
-  const bad = items.filter((it) => leftovers(it.reading).length);
+  const en = voice.lang === 'en';
+  const dict = en ? (c.readings || {}) : dictionary(c.readings);
+  const items = c.cues.map((q, k) => ({ id: cueId(c.cues, k), k, reading: en ? plainReading(q.say ? String(q.say) : q.text, dict) : toReading(q.say ? String(q.say) : q.text, dict) }));
+  const bad = en ? [] : items.filter((it) => leftovers(it.reading).length);
   if (bad.length) {
     const { SpecError } = require('./compile');
     const e = new SpecError();
@@ -168,7 +176,7 @@ async function synthesize(c, voice) {
 }
 
 async function synthesizeOne(text, voice) {
-  const reading = toReading(text, dictionary({}));
+  const reading = voice.lang === 'en' ? text : toReading(text, dictionary({}));
   return synthesizeReading(reading, voice, hasFfmpeg());
 }
 

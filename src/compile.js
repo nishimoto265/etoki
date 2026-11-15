@@ -69,6 +69,8 @@ function compile(file) {
   const errs = [];
   if (!doc || typeof doc !== 'object') fail(['データファイルが空か、形が違います']);
   if (!doc.title) errs.push('title がありません');
+  const lang = doc.lang ? String(doc.lang) : 'ja';
+  if (!['ja', 'en'].includes(lang)) errs.push(`lang は ja か en にしてください（${lang}）`);
   const fig = doc.figure || {};
   const columns = pairs(fig.columns).map(([id, label]) => (typeof label === 'object' && label ? { id, ...label } : { id, label: label || id }));
   const colIds = new Set(columns.map((c) => c.id));
@@ -77,7 +79,10 @@ function compile(file) {
   const builtIn = new Set(['browser', 'book', 'cloud', 'split', 'server', 'db', 'db2', 'cache', 'folder', 'person', 'phone', 'queue', 'gear', 'log', 'chart', 'lock', 'key', 'mail', 'gateway', 'file', 'video', 'code', 'globe', 'robot']);
   const userIcons = readIcons([path.join(srcDir, 'icons'), path.join(os.homedir(), '.config', 'etoki', 'icons')]);
   const icons = {};
+  const NODE_KEYS = new Set(['id', 'col', 'row', 'label', 'sub', 'icon', 'kind', 'span', 'in', 'w', 'h', 'x', 'y', 'labelTop']);
   for (const n of nodes) {
+    const extra = Object.keys(n).filter((k) => !NODE_KEYS.has(k));
+    if (extra.length) errs.push(`箱 ${n.id}: 知らない項目 ${extra.join(', ')} がある。値にカンマが入っているなら、その値を引用符でくくる`);
     if (!n.label) n.label = n.id;
     if (n.in && !nodeIds.has(n.in)) errs.push(`箱 ${n.id}: in に書いた ${n.in} という箱がありません`);
     if (!n.in && n.x === undefined && !colIds.has(n.col)) errs.push(`箱 ${n.id}: col に書いた ${n.col} という列がありません（列: ${[...colIds].join(', ')}）`);
@@ -120,7 +125,7 @@ function compile(file) {
       const where = `ステップ ${si + 1}「${st.title || ''}」の ${ci + 1} 文目`;
       if (typeof q === 'string') q = { text: q };
       if (!q.text) errs.push(`${where}: text がありません`);
-      const sentences = String(q.text || '').split(/[。！？]/).filter((x) => x.trim()).length;
+      const sentences = (lang === 'en' ? String(q.text || '').split(/[.!?](?=\s|$)/) : String(q.text || '').split(/[。！？]/)).filter((x) => x.trim()).length;
       if (sentences > 1) errs.push(`${where}: 1 つの文に ${sentences} 文あります。1 文ずつ分けてください`);
       if (/[①-⓿❶-➓]/.test(String(q.text || '') + String(q.caption || ''))) errs.push(`${where}: 丸数字は使わないでください`);
       const on = new Set(asList(q.on));
@@ -155,6 +160,7 @@ function compile(file) {
   if (errs.length) fail(errs);
   return {
     title: String(doc.title),
+    lang,
     voice: doc.voice ? String(doc.voice) : null,
     readings: doc.readings || {},
     spec: { columns, nodes, edges, icons },
@@ -169,7 +175,7 @@ function pageHtml(c) {
   const esc = (s) => s.replace(/[<&]/g, (ch) => (ch === '<' ? '&lt;' : '&amp;'));
   const json = (v) => JSON.stringify(v).replace(/</g, '\\u003c');
   return `<!doctype html>
-<html lang="ja">
+<html lang="${c.lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -180,6 +186,7 @@ function pageHtml(c) {
 <script>${fig}</script>
 <script>
 buildFig(document.getElementById('fig'), ${json(c.spec)});
+window.__wtLang = ${json(c.lang)};
 window.__cues = ${json(c.cues.map((q) => { const o = { ...q }; delete o.say; return o; }))};
 var S = ${json(c.S)};
 window.goTo = function (n, c) { etoki.show(S[n][c]); };

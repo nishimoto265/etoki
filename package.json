@@ -1,6 +1,6 @@
 {
   "name": "etoki",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "図と音声で仕組みを説明するページを作る",
   "license": "MIT",
   "type": "commonjs",
@@ -15,10 +15,11 @@
     "kuromoji": "0.1.2",
     "lucide-static": "0.460.0",
     "onnxruntime-node": "1.21.0",
+    "phonemizer": "1.2.1",
     "playwright": "1.65.1"
   },
   "scripts": {
-    "test": "node --test test/g2p.test.js test/reading.test.js"
+    "test": "node --test test/g2p.test.js test/reading.test.js test/en.test.js"
   },
   "files": [
     "bin",

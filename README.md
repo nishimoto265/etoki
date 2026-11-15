@@ -15,6 +15,7 @@
 - 読み上げの音声を手元で作ってページに埋め込む（Kokoro。API の鍵は要らない）
 - 箱の重なり、線が箱を突き抜けていないか、文字のはみ出し、付箋の重なりを組み立てるときに調べる
 - 再生画面: ステップの一覧と全文、シークバー、速さの切り替え、全画面、1 ステップの繰り返し
+- 日本語と英語に対応（データファイルに `lang: en` と書くと、声・画面の文言・読みの変換が英語になる）
 
 ## 使い方
 
@@ -63,7 +64,7 @@ node bin/etoki.js build examples/shop/etoki.yaml
 | `--video` | mp4 も作る（ffmpeg が要る） |
 | `--no-check` | 崩れの検査をしない |
 
-声の聞き比べ: `node bin/etoki.js voices`
+声の聞き比べ: `node bin/etoki.js voices`（英語の声は `--lang en`）
 
 ## 初めて使うとき
 
@@ -85,6 +86,7 @@ node bin/etoki.js build examples/shop/etoki.yaml
 
 ```yaml
 voice: kokoro:jf_alpha
+voice_en: kokoro:af_heart
 ```
 
 `~/.config/etoki/readings.yaml` に読み方を足せます（例: `Kafka: カフカ`）。`~/.config/etoki/icons/` に SVG を置くと、そのファイル名で絵として使えます。
@@ -98,6 +100,7 @@ voice: kokoro:jf_alpha
 | `examples/dns` 名前から IP アドレスを引くまで | 6 | 7 |
 | `examples/shop` 商品一覧が表示されるまで | 10 | 7 |
 | `examples/video` 動画がアップロードから再生されるまで | 17 | 9 |
+| `examples/shop-en` 商品一覧の英語版 | 10 | 7 |
 
 ## 検査
 

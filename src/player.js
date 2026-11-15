@@ -1,4 +1,6 @@
 (function () {
+  var EN = window.__wtLang === 'en';
+  function T(ja, en) { return EN ? en : ja; }
   var AUDIO = window.__wtAudio || {};
   var DUR = window.__wtDur || {};
   var GAP_CUE = 250;
@@ -64,7 +66,7 @@
     document.body.classList.add('wt-on');
     var cap = el('div', '', null, main); cap.id = 'wt-cap'; cap.setAttribute('aria-live', 'polite');
     var bar = el('div', '', null, main); bar.id = 'wt-bar';
-    bar.setAttribute('role', 'slider'); bar.setAttribute('aria-label', '再生の位置'); bar.tabIndex = 0;
+    bar.setAttribute('role', 'slider'); bar.setAttribute('aria-label', T('再生の位置', 'Playback position')); bar.tabIndex = 0;
     var segs = steps.map(function (s, si) {
       var last = si < steps.length - 1 ? steps[si + 1].first : cues.length;
       var len = (last < cues.length ? starts[last] : TOTAL) - starts[s.first];
@@ -79,23 +81,23 @@
     var ctrl = el('div', '', null, main); ctrl.id = 'wt-ctrl';
     var chap = el('button', 'wt-chap', '', ctrl);
     var grp = el('div', 'wt-grp', null, ctrl);
-    var bPrev = el('button', 'wt-icon', I.prev, grp); bPrev.setAttribute('aria-label', '前のステップ'); bPrev.title = '前のステップ'; bPrev.setAttribute('data-a', 'pstep');
-    var bPlay = el('button', 'wt-icon wt-play', I.play, grp); bPlay.setAttribute('aria-label', '再生'); bPlay.title = '再生'; bPlay.setAttribute('data-a', 'toggle');
-    var bNext = el('button', 'wt-icon', I.next, grp); bNext.setAttribute('aria-label', '次のステップ'); bNext.title = '次のステップ'; bNext.setAttribute('data-a', 'nstep');
+    var bPrev = el('button', 'wt-icon', I.prev, grp); bPrev.setAttribute('aria-label', T('前のステップ', 'Previous step')); bPrev.title = T('前のステップ', 'Previous step'); bPrev.setAttribute('data-a', 'pstep');
+    var bPlay = el('button', 'wt-icon wt-play', I.play, grp); bPlay.setAttribute('aria-label', T('再生', 'Play')); bPlay.title = T('再生', 'Play'); bPlay.setAttribute('data-a', 'toggle');
+    var bNext = el('button', 'wt-icon', I.next, grp); bNext.setAttribute('aria-label', T('次のステップ', 'Next step')); bNext.title = T('次のステップ', 'Next step'); bNext.setAttribute('data-a', 'nstep');
     var right = el('div', 'wt-right', null, ctrl);
     var time = el('span', '', '', right); time.id = 'wt-time';
-    var bRate = el('button', '', '1.0×', right); bRate.id = 'wt-rate'; bRate.title = '速さ'; bRate.setAttribute('aria-label', '速さ 1.0 倍');
-    var bFull = el('button', 'wt-icon', I.full, right); bFull.setAttribute('aria-label', '全画面'); bFull.title = '全画面';
+    var bRate = el('button', '', '1.0×', right); bRate.id = 'wt-rate'; bRate.title = T('速さ', 'Speed'); bRate.setAttribute('aria-label', T('速さ 1.0 倍', 'Speed 1.0x'));
+    var bFull = el('button', 'wt-icon', I.full, right); bFull.setAttribute('aria-label', T('全画面', 'Fullscreen')); bFull.title = T('全画面', 'Fullscreen');
     if (!document.fullscreenEnabled || !app.requestFullscreen) bFull.hidden = true;
     var side = el('div', '', null, frame); side.id = 'wt-side';
-    el('div', 'wt-ph', 'この説明の内容', side);
+    el('div', 'wt-ph', T('この説明の内容', 'Contents'), side);
     var tabs = el('div', 'wt-tabs', null, side); tabs.setAttribute('role', 'tablist');
-    var tS = el('button', '', 'ステップ', tabs), tT = el('button', '', '全文', tabs);
+    var tS = el('button', '', T('ステップ', 'Steps'), tabs), tT = el('button', '', T('全文', 'Transcript'), tabs);
     [tS, tT].forEach(function (b) { b.setAttribute('role', 'tab'); });
     var list = el('div', '', null, side); list.id = 'wt-list';
-    var sync = el('button', '', '今の位置に戻る', side); sync.id = 'wt-sync'; sync.hidden = true;
+    var sync = el('button', '', T('今の位置に戻る', 'Back to current'), side); sync.id = 'wt-sync'; sync.hidden = true;
     var toast = el('div', '', '', side); toast.id = 'wt-toast'; toast.hidden = true;
-    if (window.__wtCredit) el('div', 'wt-credit', '音声: ' + window.__wtCredit, side);
+    if (window.__wtCredit) el('div', 'wt-credit', T('音声: ', 'Voice: ') + window.__wtCredit, side);
 
     var audio = new Audio();
     audio.preload = 'auto';
@@ -176,10 +178,10 @@
       var q = cues[i];
       cap.textContent = q.caption;
       chap.innerHTML = '<span>' + (q.step + 1) + '. ' + (steps[q.step].title || '') + '</span>' + I.chev;
-      chap.setAttribute('aria-label', '今のステップ: ' + (steps[q.step].title || '') + '。一覧を開く');
+      chap.setAttribute('aria-label', T('今のステップ: ', 'Current step: ') + (steps[q.step].title || '') + T('。一覧を開く', '. Open the list'));
       bPlay.innerHTML = playing ? I.pause : I.play;
-      bPlay.setAttribute('aria-label', playing ? '一時停止' : '再生');
-      bPlay.title = playing ? '一時停止' : '再生';
+      bPlay.setAttribute('aria-label', playing ? T('一時停止', 'Pause') : T('再生', 'Play'));
+      bPlay.title = playing ? T('一時停止', 'Pause') : T('再生', 'Play');
       bPlay.classList.toggle('wt-going', playing);
       markList();
       cancelAnimationFrame(raf);
@@ -322,7 +324,7 @@
       rate = RATES[(RATES.indexOf(rate) + 1) % RATES.length];
       audio.playbackRate = rate;
       bRate.textContent = rate.toFixed(rate === 1 ? 1 : 2).replace(/0$/, '') + '×';
-      bRate.setAttribute('aria-label', '速さ ' + rate + ' 倍');
+      bRate.setAttribute('aria-label', T('速さ ', 'Speed ') + rate + T(' 倍', 'x'));
       if (playing && mode === 'timer') { var from = nowMs() - starts[i]; gen++; fallback(gen, from); }
     });
     bFull.addEventListener('click', function () {
@@ -334,8 +336,8 @@
     document.addEventListener('fullscreenchange', function () {
       var on = !!document.fullscreenElement;
       bFull.innerHTML = on ? I.unfull : I.full;
-      bFull.setAttribute('aria-label', on ? '全画面を終える' : '全画面');
-      bFull.title = on ? '全画面を終える' : '全画面';
+      bFull.setAttribute('aria-label', on ? T('全画面を終える', 'Exit fullscreen') : T('全画面', 'Fullscreen'));
+      bFull.title = on ? T('全画面を終える', 'Exit fullscreen') : T('全画面', 'Fullscreen');
       setTimeout(function () { callGoTo(i); }, 120);
     });
     [bPrev, bPlay, bNext].forEach(function (b) { b.addEventListener('click', function () { act(b.getAttribute('data-a')); }); });
@@ -361,9 +363,9 @@
     bar.addEventListener('pointerup', function () { drag = false; pv.hidden = true; });
 
     function share(si) {
-      var text = (steps[si].title || '') + '（ステップ ' + (si + 1) + '）: #step-' + (si + 1);
+      var text = (steps[si].title || '') + T('（ステップ ' + (si + 1) + '）', ' (step ' + (si + 1) + ')') + ': #step-' + (si + 1);
       var done = function (msg) { toast.textContent = msg; toast.hidden = false; setTimeout(function () { toast.hidden = true; }, 1600); };
-      try { navigator.clipboard.writeText(text).then(function () { done('リンクをコピーした'); }, function () { done(text); }); } catch (e) { done(text); }
+      try { navigator.clipboard.writeText(text).then(function () { done(T('リンクをコピーした', 'Link copied')); }, function () { done(text); }); } catch (e) { done(text); }
     }
     function buildList() {
       list.textContent = ''; rows = []; trows = [];
@@ -375,14 +377,14 @@
           if (snaps.length) mountSnap(th, lastCue, 115);
           el('div', '', '<div class="wt-tt">' + (si + 1) + '. ' + (s.title || '') + '</div><span class="wt-tm">' + fmt(starts[s.first]) + '</span>', r);
           var acts = el('div', 'wt-acts', null, r);
-          var sb = el('button', 'wt-icon', I.share, acts); sb.setAttribute('aria-label', 'このステップを指すリンクをコピー'); sb.title = 'このステップを指すリンクをコピー';
-          var lb = el('button', 'wt-icon', I.loop, acts); lb.setAttribute('aria-label', 'このステップをくり返す'); lb.title = 'このステップをくり返す';
+          var sb = el('button', 'wt-icon', I.share, acts); sb.setAttribute('aria-label', T('このステップを指すリンクをコピー', 'Copy a link to this step')); sb.title = T('このステップを指すリンクをコピー', 'Copy a link to this step');
+          var lb = el('button', 'wt-icon wt-loop', I.loop, acts); lb.setAttribute('aria-label', T('このステップをくり返す', 'Loop this step')); lb.title = T('このステップをくり返す', 'Loop this step');
           lb.setAttribute('aria-pressed', loop === si ? 'true' : 'false');
           sb.addEventListener('click', function (e) { e.stopPropagation(); share(si); });
           lb.addEventListener('click', function (e) {
             e.stopPropagation();
             loop = loop === si ? -1 : si;
-            rows.forEach(function (rr, k) { var b = rr.querySelector('[aria-label="このステップをくり返す"]'); if (b) b.setAttribute('aria-pressed', loop === k ? 'true' : 'false'); });
+            rows.forEach(function (rr, k) { var b = rr.querySelector('.wt-loop'); if (b) b.setAttribute('aria-pressed', loop === k ? 'true' : 'false'); });
             if (loop === si) { detached = false; jump(s.first); if (!playing) play(); }
           });
           r.addEventListener('click', function () { detached = false; jump(s.first); if (!playing) play(); });

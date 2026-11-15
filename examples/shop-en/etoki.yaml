@@ -1,0 +1,101 @@
+title: How a product list gets displayed
+lang: en
+
+figure:
+  columns:
+    client: Device
+    edge: Edge
+    app: App
+    data: Data
+  nodes:
+    br:     { col: client, row: 1, label: Browser, sub: Product list, icon: browser }
+    dns:    { col: edge, row: 0, label: DNS, sub: name → IP, icon: book }
+    cdn:    { col: edge, row: 1, label: CDN, sub: serves JS and images, icon: cloud }
+    lb:     { col: edge, row: 2, label: Load balancer, sub: spreads requests, icon: split }
+    static: { col: app, row: 0, label: Static files, sub: built JS, kind: store, icon: folder }
+    app1:   { col: app, row: 1, label: App 1, sub: API server, icon: server }
+    app2:   { col: app, row: 2, label: App 2, sub: API server, icon: server }
+    cache:  { col: data, row: 0, label: Cache, sub: "Redis, expires in 60 s", kind: store, icon: cache }
+    db:     { col: data, row: 1, label: Database (primary), sub: writes, kind: store, icon: db }
+    rep:    { col: data, row: 2, label: Database (replica), sub: read only, kind: store, icon: db2 }
+  edges:
+    - br -> dns
+    - br -> cdn
+    - cdn -> static
+    - br -> lb
+    - lb -> app1
+    - lb -> app2
+    - app1 -> cache
+    - app1 -> rep
+    - db -> rep
+
+steps:
+  - title: The big picture
+    says:
+      - text: A product list page passes through four layers, from your device on the left to the data on the right.
+      - text: The page itself comes through the CDN at the top.
+        flow: [br -> cdn, cdn -> static]
+      - text: The list data comes through the apps and databases below.
+        flow: [br -> lb, lb -> app1, app1 -> cache, app1 -> rep]
+
+  - title: Look up the name
+    says:
+      - text: First, the browser asks DNS for the IP address of the domain.
+        flow:
+          - br -> dns: shop.example.com?
+      - text: DNS answers with the addresses of the CDN and the load balancer.
+        flow:
+          - dns -> br: 203.0.113.10
+
+  - title: Fetch the page
+    says:
+      - text: The page's JavaScript and images come from the CDN.
+        flow:
+          - br -> cdn: GET /main.js
+      - text: Only when the CDN doesn't have them does it fetch them from the static files and keep a copy.
+        flow:
+          - cdn -> static: not in the CDN
+        notes:
+          static: main.js 180 KB
+
+  - title: Ask for the list
+    says:
+      - text: The page's JavaScript calls the list API.
+        flow:
+          - br -> lb: GET /api/items?page=1
+      - text: The load balancer sends it to App 1, which is less busy.
+        flow: [lb -> app1]
+        notes:
+          app1: CPU 20%
+          app2: CPU 80%
+
+  - title: Check the cache
+    says:
+      - text: The app first checks whether the cache already has the same list.
+        flow:
+          - app1 -> cache: GET items:page1
+      - text: Cache entries expire after 60 seconds, so this time it's a miss.
+        flow:
+          - cache -> app1: miss
+
+  - title: Read the database
+    says:
+      - text: So the app reads 20 items from the database replica.
+        flow:
+          - app1 -> rep: SELECT … LIMIT 20
+      - text: Writes go to the primary and reads go to the replica, which keeps the primary less busy.
+        flow:
+          - db -> rep: copies writes
+
+  - title: Return and remember
+    says:
+      - text: The app writes the 20 items to the cache and keeps them for 60 seconds.
+        flow:
+          - app1 -> cache: SET items:page1
+      - text: The list goes back to the browser through the load balancer.
+        flow:
+          - lb -> br: 200 OK, 20 items
+          - app1 -> lb
+      - text: Anyone who opens the same page in the next 60 seconds gets the answer from the cache.
+        notes:
+          cache: served from here for 60 s

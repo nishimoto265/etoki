@@ -24,6 +24,12 @@ node ETOKI build <データファイル.yaml> --shots 0,3,7
 5. **画面を自分で見る。** `--shots` で撮った PNG を読み、文字が小さすぎないか、付箋が読めるかを確かめる
 6. **ユーザーに渡す。** できた HTML を開いて見せる。見せたいステップと、使った声を一言添える
 
+## 言語
+
+ユーザーが英語で頼んだら、英語で書いて `lang: en` を付ける（画面の文言、読み上げの声、読みの変換、1 文の数え方が英語になる）。日本語なら `lang` は書かない。
+
+`{ ... }` の中に書く値にカンマ（`,`）が入るときは、`sub: "Redis, 60 s"` のように引用符でくくる。くくらないと、カンマのところで切れる。
+
 ## データファイルの形
 
 ```yaml
@@ -108,7 +114,11 @@ steps:
 | 「どんな声があるの？」 | `node ETOKI voices --out <場所>/voices.html` で聞き比べのページを作って開く |
 | 「音声なしで」 | `voice: none`。見る人のブラウザに読ませるなら `voice: browser` |
 
-声の一覧: `kokoro:jf_alpha`（女性）、`kokoro:jf_gongitsune`（女性）、`kokoro:jf_nezumi`（女性）、`kokoro:jf_tebukuro`（女性）、`kokoro:jm_kumo`（男性）。
+声の一覧:
+- 日本語: `kokoro:jf_alpha`（女性、既定）、`kokoro:jf_gongitsune`（女性）、`kokoro:jf_nezumi`（女性）、`kokoro:jf_tebukuro`（女性）、`kokoro:jm_kumo`（男性）
+- 英語（`lang: en`）: `kokoro:af_heart`（米・女性、既定）、`kokoro:af_bella`、`kokoro:af_nicole`、`kokoro:am_michael`（米・男性）、`kokoro:am_fenrir`、`kokoro:am_puck`、`kokoro:bf_emma`（英・女性）、`kokoro:bm_george`（英・男性）、`kokoro:bm_fable`
+
+いつもの英語の声は `~/.config/etoki/config.yaml` の `voice_en:` に書く。英語の声の聞き比べは `node ETOKI voices --lang en`。
 
 ## そのほか
 
