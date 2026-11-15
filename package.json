@@ -33,7 +33,7 @@
     ".claude-plugin",
     ".agents",
     "plugin.json",
-    "README.en.md"
+    "README.ja.md"
   ],
   "repository": {
     "type": "git",
