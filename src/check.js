@@ -5,6 +5,28 @@ const { load, resolveDir } = require('./deps');
 
 class BrowserError extends Error {}
 
+// 再生検査の制限時間（ミリ秒）を、プレイヤー（src/player.js）の想定所要時間から算出する。
+// 1文の長さはプレイヤーの durMs と同じ計算: 実音声の長さ（window.__wtDur）があればそれを、
+// なければ max(1.5秒, 文字数 × 0.13秒)（ブラウザ読み上げ時は 0.17秒）を使う。
+// 文間ギャップもプレイヤーと同じで、同一ステップ内は 0.25秒、ステップをまたぐときは 0.8秒。
+// 目標は「2文目（index 2、文が少ない場合は最終文）への到達」で、到達見込み時刻は
+// 目標の手前の文すべての（長さ＋直後のギャップ）の合計になる。
+// 余裕は「見込み × 1.5 ＋ 5秒」: 比例分は文が長いほど大きくなる再生・デコードのばらつきを、
+// 固定分はクリック処理や 200ms 間隔のポーリングなどの固定の遅れを吸収するためのもの。
+// 制限は見込みに比例した有限値なので、本当に止まった場合の検出は従来どおり働く。
+function playbackLimitMs(cues, dur, speech) {
+  const target = Math.min(2, cues.length - 1);
+  if (target <= 0) return 0;
+  let expected = 0;
+  for (let k = 0; k < target; k++) {
+    const q = cues[k];
+    const d = dur && dur[q.id] ? dur[q.id] : Math.max(1.5, q.text.length * (speech ? 0.17 : 0.13));
+    const gap = cues[k + 1].step !== q.step ? 0.8 : 0.25;
+    expected += d + gap;
+  }
+  return Math.round((expected * 1.5 + 5) * 1000);
+}
+
 async function launch() {
   try {
     return await launchRaw();
@@ -84,17 +106,23 @@ async function inspect(htmlFile, opts) {
     problems.push(...found);
   }
   if (opts && opts.play) {
+    const playInfo = await page.evaluate(() => ({
+      cues: window.__wt.cues.map((q) => ({ id: q.id, text: q.text, step: q.step })),
+      dur: window.__wtDur || {},
+      speech: !!window.__wtSpeech,
+    }));
+    const limitMs = playbackLimitMs(playInfo.cues, playInfo.dur, playInfo.speech);
     await page.evaluate(() => window.__wt.show(0));
     await page.click('#wt-ctrl [data-a="toggle"]');
     const t0 = Date.now();
     let st = null;
-    while (Date.now() - t0 < 20000) {
+    while (Date.now() - t0 < limitMs) {
       await page.waitForTimeout(200);
       st = await page.evaluate(() => window.__wt.state());
       if (st.i >= Math.min(2, st.n - 1)) break;
     }
-    if (st && st.n > 1 && st.i < Math.min(2, st.n - 1)) problems.push({ kind: '再生が進まない', where: `20 秒で ${st ? st.i : 0} 文目まで`, fix: '' });
-    else if (opts.play === 'audio' && (st.mode !== 'audio' || !st.heard)) problems.push({ kind: '音声が鳴っていない', where: `再生の状態 ${st.mode}、鳴った文 ${st.heard}`, fix: '' });
+    if (st && st.n > 1 && st.i < Math.min(2, st.n - 1)) problems.push({ kind: '再生が進まない', where: `${Math.round(limitMs / 1000)} 秒で ${st ? st.i : 0} 文目まで`, fix: '' });
+    else if (st && opts.play === 'audio' && (st.mode !== 'audio' || !st.heard)) problems.push({ kind: '音声が鳴っていない', where: `再生の状態 ${st.mode}、鳴った文 ${st.heard}`, fix: '' });
     await page.evaluate(() => window.__wt.show(0));
   }
   let shots = [];
@@ -112,4 +140,4 @@ async function inspect(htmlFile, opts) {
   return { problems, shots };
 }
 
-module.exports = { inspect, launch, BrowserError };
+module.exports = { inspect, launch, BrowserError, playbackLimitMs };
