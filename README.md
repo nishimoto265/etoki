@@ -6,7 +6,7 @@ The name comes from the Japanese word *etoki* (絵解き): explaining something 
 
 etoki turns "explain how this works" into a one-page HTML walkthrough. Ask Claude Code or Codex to explain a system with a diagram and voice; the agent writes a small data file, and etoki builds the page: a hand-drawn diagram that lights up step by step, with narration generated on your machine.
 
-![How a product list gets displayed](examples/shop-en/etoki-shot-0.png)
+![etoki demo — the diagram lights up step by step while a local voice narrates](demo.gif)
 
 ## What it does
 
